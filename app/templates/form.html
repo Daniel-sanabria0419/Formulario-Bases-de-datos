@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Formulario de Usuario</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA1X6KfNlvH3QDk49lK42ozh2V-DmYiVec&callback=initMap" async defer></script>
+    <script>
+        function initMap() {
+            const map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 10,
+                center: { lat: 4.711, lng: -74.0721 } // Coordenadas aproximadas de Bogotá
+            });
+            map.addListener("click", (e) => {
+                const coordinates = e.latLng.toJSON();
+                if (document.getElementById("select-location").value === "residencia") {
+                    document.getElementById("lat_residencia").value = coordinates.lat;
+                    document.getElementById("lng_residencia").value = coordinates.lng;
+                } else {
+                    document.getElementById("lat_trabajo").value = coordinates.lat;
+                    document.getElementById("lng_trabajo").value = coordinates.lng;
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <h2>Formulario de Usuario</h2>
+    <form action="{{ url_for('user.create_user') }}" method="POST">
+        <!-- Datos personales -->
+        <label for="cedula">Cédula:</label>
+        <input type="text" id="cedula" name="cedula" required><br>
+
+        <label for="nombres">Nombres:</label>
+        <input type="text" id="nombres" name="nombres" required><br>
+
+        <label for="apellidos">Apellidos:</label>
+        <input type="text" id="apellidos" name="apellidos" required><br>
+
+        <!-- Dirección de residencia -->
+        <label for="direccion_residencia">Dirección de Residencia:</label>
+        <input type="text" id="direccion_residencia" name="direccion_residencia" required><br>
+
+        <!-- Coordenadas de residencia -->
+        <label>Ubicación de Residencia:</label><br>
+        <input type="text" id="lat_residencia" name="lat_residencia" placeholder="Latitud de Residencia" readonly>
+        <input type="text" id="lng_residencia" name="lng_residencia" placeholder="Longitud de Residencia" readonly><br>
+
+        <!-- Dirección del lugar de trabajo -->
+        <label for="direccion_trabajo">Dirección del Lugar de Trabajo:</label>
+        <input type="text" id="direccion_trabajo" name="direccion_trabajo" required><br>
+
+        <!-- Coordenadas del lugar de trabajo -->
+        <label>Ubicación del Lugar de Trabajo:</label><br>
+        <input type="text" id="lat_trabajo" name="lat_trabajo" placeholder="Latitud de Trabajo" readonly>
+        <input type="text" id="lng_trabajo" name="lng_trabajo" placeholder="Longitud de Trabajo" readonly><br>
+
+        <!-- Selector para el mapa -->
+        <label for="select-location">Selecciona la ubicación a marcar en el mapa:</label>
+        <select id="select-location">
+            <option value="residencia">Residencia</option>
+            <option value="trabajo">Trabajo</option>
+        </select>
+
+        <!-- Mapa -->
+        <div id="map" style="height: 400px; margin-top: 20px;"></div><br>
+
+        <button type="submit">Enviar</button>
+        <a href="/user/list" class="btn btn-secondary mt-3">Ver lista de usuarios</a>
+    </form>
+</body>
+</html>
+
+
